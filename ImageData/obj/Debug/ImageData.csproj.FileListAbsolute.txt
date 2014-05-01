@@ -1,0 +1,6 @@
+U:\UAS\ImageDataConnector\ImageData\bin\Debug\ImageData.xml
+U:\UAS\ImageDataConnector\ImageData\bin\Debug\ImageData.dll
+U:\UAS\ImageDataConnector\ImageData\bin\Debug\ImageData.pdb
+U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.csprojResolveAssemblyReference.cache
+U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.dll
+U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.pdb

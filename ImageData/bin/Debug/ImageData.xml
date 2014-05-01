@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ImageData</name>
+    </assembly>
+    <members>
+        <member name="T:ImageDataClass.ImageData">
+            <summary>
+            A class used to help with embeddeding and reading embedded data in an image.
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLatitudeRef">
+            <summary>
+            Holds GPS Latitude reference for property defined above
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLatitudeRadians">
+            <summary>
+            Holds absolute value of GPS Latitude in radians for property defined above
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLatitudeDegrees">
+            <summary>
+            Holds absolute value of GPS Latitude in degrees for property defined below
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLongitudeRef">
+            <summary>
+            Holds GPS Latitude reference for property defined above
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLongitudeRadians">
+            <summary>
+            Holds absolute value of GPS Longitude in radians for property defined above.
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.gpsLongitudeDegrees">
+            <summary>
+            Holds absolute value of GPS longitude in degrees for property defined below.
+            </summary>
+        </member>
+        <member name="F:ImageDataClass.ImageData.asciiEncoder">
+            <summary>
+            ASCII Encoder used to encode/decode strings
+            </summary>
+        </member>
+        <member name="M:ImageDataClass.ImageData.ReadImage(System.String)">
+            <summary>
+            Opens an image and reads and returns the embedded image data.
+            </summary>
+            <param name="filename">Full path to location of image to read embedded data from.</param>
+            <returns>ImageData class with the embedded data.</returns>
+            <exception cref="T:System.IO.IOException">Filename given is not found, unable to be loaded, etc.</exception>
+            <exception cref="T:System.Exception">Image loaded does not have all embedded data expected</exception>
+        </member>
+        <member name="M:ImageDataClass.ImageData.ReadImage(System.Drawing.Image)">
+            <summary>
+            Reads the embedded image data from an image already in memory.
+            </summary>
+            <param name="image">Image in memory in which to read the embedded data</param>
+            <returns>ImageData class with the embedded data.</returns>
+            <exception cref="T:System.Exception">
+            Image loaded does not have all embedded data expected
+            </exception>
+        </member>
+        <member name="M:ImageDataClass.ImageData.SaveToImage(System.String)">
+            <summary>
+            Embed the data into given image
+            </summary>
+            <param name="filename">Full path to image to embed the data</param>
+            <exception cref="T:System.IO.IOException">Filename given is not found, unable to be loaded, etc.</exception>
+            <exception cref="T:System.Exception">Not all image data was given correctly.</exception>
+        </member>
+        <member name="M:ImageDataClass.ImageData.SaveToImage(System.Drawing.Image)">
+            <summary>
+            Embed the data into given image in memory.
+            NOTE: You will still need to save the image to disk yourself
+            </summary>
+            <param name="image">Image in memory in which to write the embedded data</param>
+            <exception cref="T:System.Exception">Not all image data was given correctly.</exception>
+        </member>
+        <member name="M:ImageDataClass.ImageData.ConvertToFraction(System.Double)">
+            <summary>
+            Converts a double into a fraction.
+            </summary>
+            <param name="dValue">Double value to convert</param>
+            <returns>Integer array in the format: [numerator,denominator]</returns>
+        </member>
+        <member name="M:ImageDataClass.ImageData.ReduceFraction(System.Int32,System.Int32)">
+            <summary>
+            Reduces a given fraction
+            </summary>
+            <param name="numerator">Numerator of input fraction</param>
+            <param name="denominator">Denominator of input fraction</param>
+            <returns>Integer array in the format: [numerator,denominator]</returns>
+        </member>
+        <member name="P:ImageDataClass.ImageData.FocalLength">
+            <summary>
+            Focal length that camera embedded in image.  Read only.
+            Returns -1 if was not present in image.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.CameraModel">
+            <summary>
+            Model of the Camera used to take the picture.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.Height">
+            <summary>
+            Hieght in pixles of the image
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.Width">
+            <summary>
+            Width in pixles of the image
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.DateTimeCreated">
+            <summary>
+            Date and Time of Image being created/taken
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSHours">
+            <summary>
+            The hours of GPS Time
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSMinutes">
+            <summary>
+            The minutes of GPS Time
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSSeconds">
+            <summary>
+            The seconds of GPS Time
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSAltitude">
+            <summary>
+            GPS Altitude above sea level in meters
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLatUsedRads">
+            <summary>
+            Indicates whether or not Radians were used when setting latitude. Read only.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLongUsedRads">
+            <summary>
+            Indicates whether or not Radians were used when setting longitude. Read only.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLatitudeRef">
+            <summary>
+            North or South for GPS Latitude Reference
+            Use "N" for north and "S" for south.
+            Defaults to "N" if not set or assigned an invalid value.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLatitudeRadians">
+            <summary>
+            GPS Latitude expressed in radians
+            Positive value indicates North reference and will be assigned automatically to GPSLatitudeRef
+            Negative value indicates South reference and will be assigned automatically to GPSLatitudeRef
+            Will return positive (North) or negative (South) numbers
+            Default value is 0
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLatitudeDegrees">
+            <summary>
+            GPS Latitude expressed in degrees
+            Positive value indicates North reference and will be assigned automatically to GPSLatitudeRef
+            Negative value indicates South reference and will be assigned automatically to GPSLatitudeRef
+            Will return positive (North) or negative (South) numbers
+            Default value is 0
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLongitudeRef">
+            <summary>
+            West or East for GPS Longitude Reference
+            Use "W" for West and "E" for East.
+            Defaults to "W" if not set or invalid parameter is given.
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLongitudeRadians">
+            <summary>
+            GPS Longitude expressed in radians
+            Positive value indicates East reference and will be assigned automatically to GPSLongitudeRef
+            Negative value indicates West reference and will be assigned automatically to GPSLongitudeRef
+            Will return positive (East) or negative (West) numbers
+            Default value is 0
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.GPSLongitudeDegrees">
+            <summary>
+            GPS Longitude expressed in degrees
+            Positive value indicates East reference and will be assigned automatically to GPSLongitudeRef
+            Negative value indicates West reference and will be assigned automatically to GPSLongitudeRef
+            Will return positive (East) or negative (West) numbers
+            Default value is 0
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.Yaw">
+            <summary>
+            Yaw in degrees
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.Pitch">
+            <summary>
+            Yaw in degrees
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.Roll">
+            <summary>
+            Yaw in degrees
+            </summary>
+        </member>
+        <member name="P:ImageDataClass.ImageData.TotalSecs">
+            <summary>
+            Combines GPS Time Minutes and GPS Time Seconds into one property.
+            Useful for our SQLite Query.
+            </summary>
+        </member>
+    </members>
+</doc>
