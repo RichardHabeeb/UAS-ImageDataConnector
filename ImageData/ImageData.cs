@@ -766,5 +766,10 @@
         }
 
         #endregion
+
+        public static ImageData interpolate(ImageData before, ImageData after)
+        {
+            return before; //TODO interpolation
+        }
     }
 }

@@ -7,3 +7,12 @@ U:\UAS\ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.pdb
 U:\UAS\ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.xml
 U:\UAS\ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.exe
 U:\UAS\ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.pdb
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.csprojResolveAssemblyReference.cache
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.exe.config
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.exe
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.pdb
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.dll
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.pdb
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.xml
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.exe
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.pdb

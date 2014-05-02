@@ -4,3 +4,8 @@ U:\UAS\ImageDataConnector\ImageData\bin\Debug\ImageData.pdb
 U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.csprojResolveAssemblyReference.cache
 U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.dll
 U:\UAS\ImageDataConnector\ImageData\obj\Debug\ImageData.pdb
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.xml
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.dll
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.pdb
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.dll
+C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.pdb

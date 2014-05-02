@@ -78,26 +78,28 @@ namespace ImageDataConnector
             }
         }
 
-        public ImageData GetClosestDataBeforeTime()
+        public ImageData GetClosestDataBefore(DateTime time)
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
+                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
                         "FROM FlightTelemetry " +
-                        " WHERE IsPhoto = @IsPhoto;",
+                        " WHERE Timestamp <= @Time;",
                         DatabaseConnection);
 
-            command.Parameters.AddWithValue("@IsPhoto", 1);
+            command.Parameters.AddWithValue("@Time", time);
 
             return GetImageDataFromDatabase(command);
         }
 
-        public ImageData GetClosestDataAfterTime()
+        public ImageData GetClosestDataAfter(DateTime time)
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
+                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
                         "FROM FlightTelemetry " +
-                        " WHERE IsPhoto = @IsPhoto;",
+                        " WHERE Timestamp >= @Time;",
                         DatabaseConnection);
+
+            command.Parameters.AddWithValue("@Time", time);
 
             return GetImageDataFromDatabase(command);
         }
@@ -105,12 +107,14 @@ namespace ImageDataConnector
         public ImageData GetFirstPhotoData()
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
+                        "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
                         "FROM FlightTelemetry " +
-                        " WHERE IsPhoto = @IsPhoto;",
+                        " WHERE IsPhoto = @IsPhoto" + 
+                        " AND PhotoCounter = @PhotoNum;",
                         DatabaseConnection);
 
             command.Parameters.AddWithValue("@IsPhoto", 1);
+            command.Parameters.AddWithValue("@PhotoNum", 0);
 
             return GetImageDataFromDatabase(command);
         }
