@@ -508,10 +508,10 @@
         {
             Image imageData = Image.FromFile(filename);
             SaveToImage(imageData);
-            imageData.Save(filename + ".bak");
+            imageData.Save(filename + ".tmp");
             imageData.Dispose();
             File.Delete(filename);
-            File.Move(filename + ".bak", filename);
+            File.Move(filename + ".tmp", filename);
         }
 
         /// <summary>
@@ -769,7 +769,19 @@
 
         public static ImageData interpolate(ImageData before, ImageData after)
         {
-            return before; //TODO interpolation
+            ImageData result = new ImageData();
+            result.DateTimeCreated =        new DateTime((after.DateTimeCreated.Ticks + before.DateTimeCreated.Ticks) / 2);
+            result.GPSHours =              ( before.GPSHours +                after.GPSHours                ) / 2;
+            result.GPSMinutes =            ( before.GPSMinutes +              after.GPSMinutes              ) / 2;
+            result.GPSSeconds =            ( before.GPSSeconds +              after.GPSSeconds              ) / 2;
+            result.GPSLatitudeDegrees =    ( before.GPSLatitudeDegrees +      after.GPSLatitudeDegrees      ) / 2;
+            result.GPSLongitudeDegrees =   ( before.GPSLongitudeDegrees +     after.GPSLongitudeDegrees     ) / 2;
+            result.GPSAltitude =           ( before.GPSAltitude +             after.GPSAltitude             ) / 2;
+            result.Yaw =                   ( before.Yaw +                     after.Yaw                     ) / 2;
+            result.Pitch =                 ( before.Pitch +                   after.Pitch                   ) / 2;
+            result.Roll =                  ( before.Roll +                    after.Roll                    ) / 2;
+
+            return result;
         }
     }
 }

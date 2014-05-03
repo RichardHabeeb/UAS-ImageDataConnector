@@ -9,3 +9,9 @@ C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\bin\D
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.pdb
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.dll
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.xml
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.dll
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\bin\Debug\ImageData.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.csprojResolveAssemblyReference.cache
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.dll
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageData\obj\Debug\ImageData.pdb

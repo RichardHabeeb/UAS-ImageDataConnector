@@ -104,7 +104,7 @@ namespace ImageDataConnector
             return GetImageDataFromDatabase(command);
         }
 
-        public ImageData GetFirstPhotoData()
+        public ImageData GetPhotoData(int photoNum)
         {
             SqlCommand command = new SqlCommand(
                         "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
@@ -114,7 +114,7 @@ namespace ImageDataConnector
                         DatabaseConnection);
 
             command.Parameters.AddWithValue("@IsPhoto", 1);
-            command.Parameters.AddWithValue("@PhotoNum", 0);
+            command.Parameters.AddWithValue("@PhotoNum", photoNum);
 
             return GetImageDataFromDatabase(command);
         }
@@ -126,46 +126,54 @@ namespace ImageDataConnector
         /// <param name="sqlConnection"></param>
         public ImageData GetImageDataFromDatabase(SqlCommand command)
         {
-            while (true)
+            SqlDataReader reader = null;
+            try
             {
-                try
+                //Console.WriteLine("Attempting to get image data.");
+                reader = command.ExecuteReader();
+                ImageData Row = new ImageData();
+
+                if(!reader.HasRows)
                 {
-                    Console.WriteLine("Attempting to get image data.");
-
-                    SqlDataReader reader = command.ExecuteReader();
-                    ImageData Row = new ImageData();
-
-                    if(!reader.HasRows)
-                    {
-                        return null;
-                    }
-
-                    while (reader.Read())
-                    {
-                        //ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto
-
-                        int rowId = reader.GetInt32(0);
-                        DateTime timestamp = reader.GetDateTime(1);
-                        Row.GPSHours = timestamp.Hour;
-                        Row.GPSMinutes = timestamp.Minute;
-                        Row.GPSSeconds = timestamp.Second; // TODO: figure out if this is how the DT should be stored
-                        Row.GPSLatitudeDegrees = reader.GetDouble(2);
-                        Row.GPSLongitudeDegrees = reader.GetDouble(3);
-                        Row.Yaw = reader.GetFloat(5);
-                        Row.Pitch = reader.GetFloat(6);
-                        Row.Roll = reader.GetFloat(7);
-                        int photocount = reader.GetInt32(8);
-                    }
-
                     reader.Close();
+                    return null;
+                }
 
-                    return Row;
-                }
-                catch (Exception ex)
+                if (reader.Read())
                 {
-                    Console.WriteLine("Failed to get image data.");
-                    SetupDatabaseConnection();
+                    //ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto
+
+                    int rowId = reader.GetInt32(0);
+                    DateTime timestamp = reader.GetDateTime(1);
+                    Row.DateTimeCreated = timestamp;
+                    Row.GPSHours = timestamp.Hour;
+                    Row.GPSMinutes = timestamp.Minute;
+                    Row.GPSSeconds = timestamp.Second; // TODO: figure out if this is how the DT should be stored
+                    Row.GPSLatitudeDegrees = reader.GetDouble(2);
+                    Row.GPSLongitudeDegrees = reader.GetDouble(3);
+                    Row.GPSAltitude = (float) reader.GetDouble(4);
+                    Row.Yaw = (float) reader.GetDouble(5);
+                    Row.Pitch = (float) reader.GetDouble(6);
+                    Row.Roll = (float) reader.GetDouble(7);
+                    int photocount = reader.GetInt32(8);
                 }
+
+                reader.Close();
+
+                return Row;
+            }
+            catch (Exception e)
+            {
+                //TODO better error handling
+                //Console.WriteLine("Failed to get image data, closing and re-opening database connection.");
+                //DatabaseConnection.Close();
+               // DatabaseConnection = null;
+                //SetupDatabaseConnection();
+               // return GetImageDataFromDatabase(command);
+                Console.WriteLine("Error reading from database: " + e + " " + e.Message);
+                if(reader != null)
+                    reader.Close();
+                return null;
             }
         }
 

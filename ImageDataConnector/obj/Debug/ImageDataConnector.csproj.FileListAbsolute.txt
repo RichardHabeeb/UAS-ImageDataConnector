@@ -16,3 +16,12 @@ C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnec
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.xml
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.exe
 C:\Users\Sam\Dropbox\UAS\current\embedder\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.exe.config
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.exe
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.exe
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageDataConnector.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.dll
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.pdb
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\bin\Debug\ImageData.xml
+C:\Users\SpyKat\Desktop\UAS-ImageDataConnector\ImageDataConnector\obj\Debug\ImageDataConnector.csprojResolveAssemblyReference.cache

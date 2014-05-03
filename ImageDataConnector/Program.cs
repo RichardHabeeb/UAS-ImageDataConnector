@@ -12,8 +12,11 @@ namespace ImageDataConnector
     class Program
     {
         //make sure to add / to the end of folder paths
-        private static string RECIEVING_IMAGE_FOLDER = "C:/incoming_pics/";
-        private static string DESTINATION_IMAGE_FOLDER = "C:/embedded_pics/";
+        private static string RECIEVING_IMAGE_FOLDER = "J:\\pics\\raw\\";
+        private static string DESTINATION_IMAGE_FOLDER = "J:\\pics\\embedded\\";
+
+        //there is also a backup const for recieving folder in FolderMonitor
+        private static string DESTINATION_IMAGE_FOLDER_BACKUP = "J:\\pics\\embedded_backup\\";
 
         //seconds until an image will be moved to the destination folder with no data
         private static int SECS_BEFORE_SKIP_EMBED = 10;
@@ -26,22 +29,23 @@ namespace ImageDataConnector
             long dataImageTimeOffset;
 
             //wait for first image and gps data to calculate time offset
+            Console.WriteLine("Waiting for first image data for offset calculation...");
             while(true)
             {
-                Console.WriteLine("Waiting for first image data for offset calculation...");
                 List<PendingImage> imageQueue = monitor.GetCopyOfQueue();
                 if(imageQueue.Count > 0)
                 {
-                    ImageData firstImageData = dbHandler.GetFirstPhotoData();
+                    ImageData firstImageData = dbHandler.GetPhotoData(1);
                     if (firstImageData != null)
                     {
                         Console.WriteLine("First image data recieved");
-                        long cameraImageTime = ParseTimeFromImgName(imageQueue[0].file.Name);
-                        long dataImageTime = firstImageData.DateTimeCreated.Ticks;
-                        dataImageTimeOffset = dataImageTime - cameraImageTime;
+                        DateTime cameraImageTime = ParseTimeFromImgName(imageQueue[0].file.Name);
+                        DateTime dataTime = firstImageData.DateTimeCreated;
+
+                        dataImageTimeOffset = dataTime.Ticks - cameraImageTime.Ticks;
                         
                         Console.WriteLine("Camera time: " + cameraImageTime);
-                        Console.WriteLine("Data time: " + dataImageTime);
+                        Console.WriteLine("Data time: " + dataTime);
                         Console.WriteLine("Time offset (data - camera): " + dataImageTimeOffset);
                         break;
                     }
@@ -50,21 +54,24 @@ namespace ImageDataConnector
                 Thread.Sleep(1000);
             }
 
+            int cout = 0;
             //start main processing loop
             while(true)
             {
+
                 //avoid accessing the original list to avoid multithreading problems
                 List<PendingImage> imageQueue = monitor.GetCopyOfQueue();
+                Console.WriteLine("Get copy of queue " + cout++);
 
                 foreach (PendingImage image in imageQueue)
                 {
                     Console.WriteLine("Attempting to process: " + image.file.Name);
+                    DateTime cameraTime = ParseTimeFromImgName(image.file.Name);
+                    DateTime dataTime = cameraTime.AddTicks(dataImageTimeOffset);
 
-                    DateTime time = new DateTime(ParseTimeFromImgName(image.file.Name) + dataImageTimeOffset);
-
-                    Console.WriteLine("Looking up data bordering: " + time.Ticks);
-                    ImageData before = dbHandler.GetClosestDataBefore(time);
-                    ImageData after = dbHandler.GetClosestDataAfter(time);
+                    Console.WriteLine("Looking up data bordering: " + dataTime.Ticks);
+                    ImageData before = dbHandler.GetClosestDataBefore(dataTime);
+                    ImageData after = dbHandler.GetClosestDataAfter(dataTime);
 
                     if(before != null && after != null)
                     {
@@ -85,6 +92,10 @@ namespace ImageDataConnector
                         PackageAndShipImage(image, before);
                     }
                 }
+
+                //imageQueue = null;
+
+                Thread.Sleep(1000);
             }
         }
 
@@ -111,10 +122,15 @@ namespace ImageDataConnector
 
             //move
             string destinationFile = DESTINATION_IMAGE_FOLDER + image.file.Name.Split('_')[0];
+            if (image.file.Name.ToLower().Contains("thermal"))
+                destinationFile += "_" + image.file.Name.Split('_')[1];
+            destinationFile += image.file.Extension;
+
             Console.WriteLine("Moving " + image.file.Name + " to " + destinationFile);
             try
             {
                 System.IO.File.Move(image.file.FullName, destinationFile);
+                System.IO.File.Copy(destinationFile, DESTINATION_IMAGE_FOLDER_BACKUP + image.file.Name);
             }
             catch (Exception e)
             {
@@ -125,19 +141,23 @@ namespace ImageDataConnector
             return true;
         }
 
-        private static long ParseTimeFromImgName(string name)
+        private static DateTime ParseTimeFromImgName(string name)
         {
             //Format is {local img num}_{remote img num}_{time in ms}
-            long imgTime;
-            if(long.TryParse(name.Split('_')[2], out imgTime))
-            {
-                return imgTime;
+            string[] splitName = name.Split('_');
+
+            try
+            { 
+                long imgTime;
+                if(long.TryParse(name.Split('_')[2].ToLower().Replace(".jpg", ""), out imgTime))
+                {
+                     return new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(imgTime);
+                }
             }
-            else
-            {
-                Console.WriteLine("Failed to parse image time: " + name);
-                return -1;
-            }
+            catch(Exception) {}
+
+            Console.WriteLine("Failed to parse image time: " + name);
+            return DateTime.MinValue;
         }
 
     }

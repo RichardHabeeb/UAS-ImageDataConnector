@@ -9,6 +9,8 @@ namespace ImageDataConnector
 {
     class FolderMonitor
     {
+        private static string RECIEVING_IMAGE_FOLDER_BACKUP = "J:\\pics\\raw_backup\\";
+
         private List<PendingImage> list = new List<PendingImage>();
 
         public FolderMonitor(DirectoryInfo directory)
@@ -20,6 +22,8 @@ namespace ImageDataConnector
                 if (file.Extension.ToLower() == ".jpg" && file.Length > 0)
                 {
                     Console.WriteLine("Adding file: " + file.Name);
+                    if (!System.IO.File.Exists(RECIEVING_IMAGE_FOLDER_BACKUP + file.Name))
+                        System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
                     list.Add(new PendingImage(file, DateTime.Now));
                 }
                 else
@@ -46,6 +50,7 @@ namespace ImageDataConnector
                 if (list.Find(item => item.file.Name == file.Name) == null)
                 {
                     Console.WriteLine("Adding file: " + e.Name);
+                    System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
                     PendingImage newImg = new PendingImage(file, DateTime.Now);
                     SafeAdd(newImg);
                 }
