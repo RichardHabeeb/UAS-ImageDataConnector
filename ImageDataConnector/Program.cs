@@ -21,6 +21,8 @@ namespace ImageDataConnector
         //seconds until an image will be moved to the destination folder with no data
         private static int SECS_BEFORE_SKIP_EMBED = 10;
 
+        private static int CAMERA_TRIGGER_LATENCY_MS = 70;
+
         static void Main(string[] args)
         {
             DatabaseHandler dbHandler = DatabaseHandler.GetInstance();
@@ -33,16 +35,24 @@ namespace ImageDataConnector
             while(true)
             {
                 List<PendingImage> imageQueue = monitor.GetCopyOfQueue();
+                imageQueue.RemoveAll(item => item.file.Name.ToLower().Contains("thermal"));
                 if(imageQueue.Count > 0)
                 {
-                    ImageData firstImageData = dbHandler.GetPhotoData(1);
+                    int imgNum;
+                    if(!int.TryParse(imageQueue[0].file.Name.Split('_')[0], out imgNum))
+                    {
+                        Console.WriteLine("Failed to parse img num: " + imageQueue[0].file.Name);
+                        continue;
+                    }
+
+                    ImageData firstImageData = dbHandler.GetPhotoData(imgNum + 1);
                     if (firstImageData != null)
                     {
                         Console.WriteLine("First image data recieved");
                         DateTime cameraImageTime = ParseTimeFromImgName(imageQueue[0].file.Name);
                         DateTime dataTime = firstImageData.DateTimeCreated;
 
-                        dataImageTimeOffset = dataTime.Ticks - cameraImageTime.Ticks;
+                        dataImageTimeOffset = dataTime.Ticks - cameraImageTime.Ticks + CAMERA_TRIGGER_LATENCY_MS * 10000;
                         
                         Console.WriteLine("Camera time: " + cameraImageTime);
                         Console.WriteLine("Data time: " + dataTime);
@@ -76,7 +86,7 @@ namespace ImageDataConnector
                     if(before != null && after != null)
                     {
                         Console.WriteLine("Data found for: " + image.file.Name);
-                        ImageData interpolated = ImageData.interpolate(before, after);
+                        ImageData interpolated = ImageData.interpolate(dataTime, before, after);
 
                         //embed
                         if( PackageAndShipImage(image, interpolated) )

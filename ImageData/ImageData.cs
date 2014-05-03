@@ -767,20 +767,21 @@
 
         #endregion
 
-        public static ImageData interpolate(ImageData before, ImageData after)
+        public static ImageData interpolate(DateTime imageTime, ImageData earlierData, ImageData laterData)
         {
+            float scaling = (laterData.DateTimeCreated.Ticks - imageTime.Ticks) / (laterData.DateTimeCreated.Ticks - earlierData.DateTimeCreated.Ticks);
             ImageData result = new ImageData();
-            result.DateTimeCreated =        new DateTime((after.DateTimeCreated.Ticks + before.DateTimeCreated.Ticks) / 2);
-            result.GPSHours =              ( before.GPSHours +                after.GPSHours                ) / 2;
-            result.GPSMinutes =            ( before.GPSMinutes +              after.GPSMinutes              ) / 2;
-            result.GPSSeconds =            ( before.GPSSeconds +              after.GPSSeconds              ) / 2;
-            result.GPSLatitudeDegrees =    ( before.GPSLatitudeDegrees +      after.GPSLatitudeDegrees      ) / 2;
-            result.GPSLongitudeDegrees =   ( before.GPSLongitudeDegrees +     after.GPSLongitudeDegrees     ) / 2;
-            result.GPSAltitude =           ( before.GPSAltitude +             after.GPSAltitude             ) / 2;
-            result.Yaw =                   ( before.Yaw +                     after.Yaw                     ) / 2;
-            result.Pitch =                 ( before.Pitch +                   after.Pitch                   ) / 2;
-            result.Roll =                  ( before.Roll +                    after.Roll                    ) / 2;
-
+            result.DateTimeCreated =        new DateTime((long) ((laterData.DateTimeCreated.Ticks + earlierData.DateTimeCreated.Ticks) * scaling));
+            result.GPSHours =              (int) (( earlierData.GPSHours +                laterData.GPSHours                ) * scaling);
+            result.GPSMinutes =            (int) (( earlierData.GPSMinutes +              laterData.GPSMinutes              ) * scaling);
+            result.GPSSeconds =            ( earlierData.GPSSeconds +              laterData.GPSSeconds              ) * scaling;
+            result.GPSLatitudeDegrees =    ( earlierData.GPSLatitudeDegrees +      laterData.GPSLatitudeDegrees      ) * scaling;
+            result.GPSLongitudeDegrees =   ( earlierData.GPSLongitudeDegrees +     laterData.GPSLongitudeDegrees     ) * scaling;
+            result.GPSAltitude =           ( earlierData.GPSAltitude +             laterData.GPSAltitude             ) * scaling;
+            result.Yaw =                   ( earlierData.Yaw +                     laterData.Yaw                     ) * scaling;
+            result.Pitch =                 ( earlierData.Pitch +                   laterData.Pitch                   ) * scaling;
+            result.Roll =                  ( earlierData.Roll +                    laterData.Roll                    ) * scaling;
+                                                                                                                       *
             return result;
         }
     }
