@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageDataConnector
@@ -11,7 +12,7 @@ namespace ImageDataConnector
     {
         private static string RECIEVING_IMAGE_FOLDER_BACKUP = "J:\\pics\\raw_backup\\";
 
-        private List<PendingImage> list = new List<PendingImage>();
+        private List<PendingFile> list = new List<PendingFile>();
 
         public FolderMonitor(DirectoryInfo directory)
         {
@@ -19,16 +20,25 @@ namespace ImageDataConnector
             FileInfo[] files = directory.GetFiles();
             foreach (FileInfo file in files)
             {
-                if (file.Extension.ToLower() == ".jpg" && file.Length > 0)
+                if (file.Extension.ToLower() == ".jpg" && file.Length > 0 || file.Extension.ToLower() == ".imgtime")
                 {
                     Console.WriteLine("Adding file: " + file.Name);
                     if (!System.IO.File.Exists(RECIEVING_IMAGE_FOLDER_BACKUP + file.Name))
-                        System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
-                    list.Add(new PendingImage(file, DateTime.Now));
+                    {
+                        try
+                        {
+                            System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Failed to backup raw image " + file.Name + " : " + e);
+                        }
+                    }
+                    list.Add(new PendingFile(file, DateTime.Now));
                 }
                 else
                 {
-                    Console.WriteLine("Ignoring file (non-jpg or empty): " + file.Name);
+                    Console.WriteLine("Ignoring file: " + file.Name);
                 }
             }
              
@@ -43,29 +53,41 @@ namespace ImageDataConnector
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+            Thread.Sleep(5000);
             FileInfo file = new FileInfo(e.FullPath);
-            if(file.Extension.ToLower() == ".jpg" && file.Length > 0)
+            if((file.Extension.ToLower() == ".jpg" && file.Length > 0) || file.Extension.ToLower() == ".imgtime")
             {
                 //add if not already in list
                 if (list.Find(item => item.file.Name == file.Name) == null)
                 {
                     Console.WriteLine("Adding file: " + e.Name);
-                    System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
-                    PendingImage newImg = new PendingImage(file, DateTime.Now);
+                    if (!System.IO.File.Exists(RECIEVING_IMAGE_FOLDER_BACKUP + file.Name))
+                    {
+                        try
+                        {
+                            System.IO.File.Copy(file.FullName, RECIEVING_IMAGE_FOLDER_BACKUP + file.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Failed to backup raw image " + file.Name + " : " + ex);
+                        }
+                    }
+
+                    PendingFile newImg = new PendingFile(file, DateTime.Now);
                     SafeAdd(newImg);
                 }
             }
         }
 
-        public List<PendingImage> GetCopyOfQueue()
+        public List<PendingFile> GetCopyOfQueue()
         {
             lock (list)
             {
-                return new List<PendingImage>(list);
+                return new List<PendingFile>(list);
             }
         }
 
-        private void SafeAdd(PendingImage img)
+        private void SafeAdd(PendingFile img)
         {
             lock (list)
             {
@@ -73,7 +95,7 @@ namespace ImageDataConnector
             }
         }
 
-        public void Remove(PendingImage img)
+        public void Remove(PendingFile img)
         {
             lock (list)
             {

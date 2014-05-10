@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 
 namespace ImageDataConnector
 {
-    class PendingImage
+    class PendingFile
     {
         public FileInfo file;
         public DateTime recieved;
 
-        public PendingImage(FileInfo file, DateTime recieved)
+        public PendingFile(FileInfo file, DateTime recieved)
         {
             this.file = file;
             this.recieved = recieved;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("file: {0}, recieved: {1}", file, recieved);
         }
     }
 }

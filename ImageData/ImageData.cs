@@ -769,7 +769,33 @@
 
         public static ImageData interpolate(DateTime imageTime, ImageData earlierData, ImageData laterData)
         {
-            float scaling = (laterData.DateTimeCreated.Ticks - imageTime.Ticks) / (laterData.DateTimeCreated.Ticks - earlierData.DateTimeCreated.Ticks);
+            float totalTimeSpan = (laterData.DateTimeCreated.Ticks - earlierData.DateTimeCreated.Ticks);
+            if (totalTimeSpan == 0)
+                return earlierData;
+
+            float scaling = (imageTime.Ticks - earlierData.DateTimeCreated.Ticks) / totalTimeSpan;
+            ImageData result = new ImageData();
+            result.DateTimeCreated = new DateTime((long)((laterData.DateTimeCreated.Ticks + earlierData.DateTimeCreated.Ticks) * scaling));
+            result.GPSHours = earlierData.GPSHours + (int)((-earlierData.GPSHours + laterData.GPSHours) * scaling);
+            result.GPSMinutes = earlierData.GPSMinutes + (int)((-earlierData.GPSMinutes + laterData.GPSMinutes) * scaling);
+            result.GPSSeconds = earlierData.GPSSeconds + (-earlierData.GPSSeconds + laterData.GPSSeconds) * scaling;
+            result.GPSLatitudeDegrees = earlierData.GPSLatitudeDegrees + (-earlierData.GPSLatitudeDegrees + laterData.GPSLatitudeDegrees) * scaling;
+            result.GPSLongitudeDegrees = earlierData.GPSLongitudeDegrees + (-earlierData.GPSLongitudeDegrees + laterData.GPSLongitudeDegrees) * scaling;
+            result.GPSAltitude = earlierData.GPSAltitude + (-earlierData.GPSAltitude + laterData.GPSAltitude) * scaling;
+            result.Yaw = earlierData.Yaw + (-earlierData.Yaw + laterData.Yaw) * scaling;
+            result.Pitch = earlierData.Pitch + (-earlierData.Pitch + laterData.Pitch) * scaling;
+            result.Roll = earlierData.Roll + (-earlierData.Roll + laterData.Roll) * scaling;
+
+            return result;
+
+            /*
+            float scaling;
+
+            if (laterData.DateTimeCreated.Ticks - earlierData.DateTimeCreated.Ticks == 0)
+                scaling = 0;
+            else
+                scaling = (laterData.DateTimeCreated.Ticks - imageTime.Ticks) / (laterData.DateTimeCreated.Ticks - earlierData.DateTimeCreated.Ticks);
+
             ImageData result = new ImageData();
             result.DateTimeCreated =        new DateTime((long) ((laterData.DateTimeCreated.Ticks + earlierData.DateTimeCreated.Ticks) * scaling));
             result.GPSHours =              (int) (( earlierData.GPSHours +                laterData.GPSHours                ) * scaling);
@@ -781,8 +807,9 @@
             result.Yaw =                   ( earlierData.Yaw +                     laterData.Yaw                     ) * scaling;
             result.Pitch =                 ( earlierData.Pitch +                   laterData.Pitch                   ) * scaling;
             result.Roll =                  ( earlierData.Roll +                    laterData.Roll                    ) * scaling;
-                                                                                                                       *
+                                                                                                                       
             return result;
+             * */
         }
     }
 }

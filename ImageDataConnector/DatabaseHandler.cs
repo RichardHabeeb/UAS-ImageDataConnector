@@ -12,7 +12,7 @@ namespace ImageDataConnector
 {
     public class DatabaseHandler
     {
-        public const string DatabaseAddress = "192.168.15.13";
+        public const string DatabaseAddress = "192.168.15.15"; //.13 on wifi
         public const string DatabaseName = "AUVSI";
         public const string DatabaseUsername = "sa";
         public const string DatabasePassword = "QaWsEdRfTg1!";
@@ -64,7 +64,7 @@ namespace ImageDataConnector
             {
                 try
                 {
-                    Console.WriteLine("Attempting to get connect to database");
+                    Console.WriteLine("Attempting to connect to database");
                     DatabaseConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
                     DatabaseConnection.Open();
                     System.Diagnostics.Debug.Assert(DatabaseConnection.State == ConnectionState.Open);
@@ -78,10 +78,21 @@ namespace ImageDataConnector
             }
         }
 
+        public bool GetBorderingData(DateTime time, out ImageData before, out ImageData after)
+        {
+            before = GetClosestDataBefore(time);
+            after = GetClosestDataAfter(time);
+
+            if (before != null && after != null)
+                return true;
+
+            return false;
+        }
+
         public ImageData GetClosestDataBefore(DateTime time)
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
+                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
                         "FROM FlightTelemetry " +
                         " WHERE Timestamp <= @Time;",
                         DatabaseConnection);
@@ -94,7 +105,7 @@ namespace ImageDataConnector
         public ImageData GetClosestDataAfter(DateTime time)
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " + //TODO Update SQL command to only get closest row
+                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
                         "FROM FlightTelemetry " +
                         " WHERE Timestamp >= @Time;",
                         DatabaseConnection);
@@ -104,17 +115,16 @@ namespace ImageDataConnector
             return GetImageDataFromDatabase(command);
         }
 
-        public ImageData GetPhotoData(int photoNum)
+        public ImageData GetFirstPhotoData()
         {
             SqlCommand command = new SqlCommand(
-                        "SELECT ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
+                        "SELECT TOP 1 ID, TimeStamp, Latitude, Longitude, Altitude, Azimuth, Pitch, Roll, PhotoCounter, IsPhoto " +
                         "FROM FlightTelemetry " +
-                        " WHERE IsPhoto = @IsPhoto" + 
-                        " AND PhotoCounter = @PhotoNum;",
+                        " WHERE IsPhoto = @IsPhoto " +
+                        "ORDER BY TimeStamp",
                         DatabaseConnection);
 
             command.Parameters.AddWithValue("@IsPhoto", 1);
-            command.Parameters.AddWithValue("@PhotoNum", photoNum);
 
             return GetImageDataFromDatabase(command);
         }

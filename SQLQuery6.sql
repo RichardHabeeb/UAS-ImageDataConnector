@@ -1,0 +1,1 @@
+﻿SELECT * FROM FlightTelemetry WHERE IsPhoto = 1 
