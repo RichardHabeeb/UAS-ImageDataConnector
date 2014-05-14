@@ -53,13 +53,13 @@ namespace ImageDataConnector
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            Thread.Sleep(5000);
             FileInfo file = new FileInfo(e.FullPath);
             if((file.Extension.ToLower() == ".jpg" && file.Length > 0) || file.Extension.ToLower() == ".imgtime")
             {
-                //add if not already in list
+                //check if in list
                 if (list.Find(item => item.file.Name == file.Name) == null)
                 {
+                    //create backup
                     Console.WriteLine("Adding file: " + e.Name);
                     if (!System.IO.File.Exists(RECIEVING_IMAGE_FOLDER_BACKUP + file.Name))
                     {
@@ -72,7 +72,8 @@ namespace ImageDataConnector
                             Console.WriteLine("Failed to backup raw image " + file.Name + " : " + ex);
                         }
                     }
-
+                    
+                    //add to list
                     PendingFile newImg = new PendingFile(file, DateTime.Now);
                     SafeAdd(newImg);
                 }
